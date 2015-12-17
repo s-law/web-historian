@@ -1,3 +1,4 @@
+var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
@@ -46,13 +47,50 @@ exports.addUrlToList = function(target, callback) {
 };
 
 exports.isUrlArchived = function(target, callback) {
-  fs.open(exports.paths.archivedSites + target, 'r', function(err, stats) {
-    if (err && err.code=='ENOENT') {
+  fs.stat(exports.paths.archivedSites + target, function(err, stat) {
+    if (err === null) {
+      callback(true);
+    } else if (err.code === 'ENOENT') {
       callback(false);
     }
-    callback(true);
   });
 };
 
-exports.downloadUrls = function(target) {
+exports.downloadUrls = function(array) {
+  array.forEach(function(target) {
+    exports.isUrlArchived(target, function(result) {
+      if (!result) {
+        downloadUrl(target);
+      }
+    });
+  });
+
+  var downloadUrl = function(target) {
+    var options = {
+      // .host is a property of the object returned by url.parse
+      host: target,
+      port: 80,
+      path: ''
+    };
+
+    http.get(options, function(res) {
+      var completeData;
+      res.on('data', function(chunk) {
+        completeData += chunk;
+      });
+      res.on('end', function() {
+        fs.writeFile(exports.paths.archivedSites + '/' + target, completeData, function (err) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+    });    
+  };
 };
+
+
+
+
+
+
