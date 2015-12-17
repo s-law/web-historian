@@ -15,7 +15,7 @@ exports.handleRequest = function(req, res) {
   } else if (req.method === 'GET') {
     httpHelpers.serveAssets(res, req.url);
   } else if (req.method === 'POST') {
-    httpHelpers.collectData(req, res);
+    httpHelpers.collectData(req, res, httpHelpers.processData);
   } else {
     httpHelpers.sendResponse(res, null, 404);
   }
