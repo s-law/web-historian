@@ -44,35 +44,28 @@ exports.sendResponse = function(response, data, statusCode) {
   response.end(data);
 };
 
-exports.collectData = function(request, response) {
+exports.collectData = function(request, response, callback) {
   var target = "";
   request.on('data', function(chunk) {
     target += chunk;
   });
   request.on('end', function() {
     target = target.substr(4);
-    exports.processData(target, response);
+    callback(target, response);
   });
 };
 
 exports.processData = function(target, response) {
   archive.isUrlInList(target, function(inList) {
     if(!inList) {
-      // url is not in list so...
-      // add the url to list
       archive.addUrlToList(target, function() {
-        //then send user to loading page
         exports.serveAssets(response, '/public/loading.html', 302);
       });
     } else {
-      // url is in list
       archive.isUrlArchived(target, function(inArchive) {
         if(!inArchive) {
-          // but url hasn't been archived yet,
-          // so send user to loading page
           exports.serveAssets(response, '../public/loading.html', 302);
         } else {
-          // url has been archived, so serve up the archived page
           exports.serveAssets(response, '../archives/sites/'+target, 200);
         }
       });
