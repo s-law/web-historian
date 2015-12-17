@@ -2,4 +2,6 @@
 // that are waiting.
 var archiveHelpers = require('../helpers/archive-helpers');
 
-archiveHelpers.downloadUrls(['www.google.com', 'www.nytimes.com']);
+archiveHelpers.readListOfUrls(function(array) {
+  archiveHelpers.downloadUrls(array);
+});
