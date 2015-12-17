@@ -17,7 +17,7 @@ exports.handleRequest = function(req, res) {
   } else if (req.method === 'GET') {
     httpHelpers.serveAssets(res, req.url);
   } else if (req.method === 'POST') {
-    httpHelpers.collectData(req)
+    httpHelpers.collectData(req);
   //   var dataHolder = '';
   //   req.on('data', function(data) {
   //     dataHolder += data;
