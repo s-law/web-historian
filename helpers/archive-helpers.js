@@ -10,7 +10,7 @@ var _ = require('underscore');
  */
 
 exports.paths = {
-  siteAssets: path.join(__dirname, '../web/public'),
+  siteAssets: path.join(__dirname, '../web/public/'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
@@ -25,17 +25,34 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
+  // Continuous passing style!
+  fs.readFile(exports.paths.list, 'utf8', function(err, data) {
+    callback(data.split('\n'));
+  });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(target, callback) {
+  exports.readListOfUrls(function(list) {
+    callback(list.indexOf(target) > 0);
+  });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(target, callback) {
+  // tacks on to an existing file (if doesn't exist, will generate)
+  fs.appendFile(exports.paths.list, '\n' + target, function(err) {
+    callback();
+  });
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(target, callback) {
+  fs.open(exports.paths.archivedSites + target, 'r', function(err, stats) {
+    if (err && err.code=='ENOENT') {
+      callback(false);
+    }
+    callback(true);
+  });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(target) {
 };
