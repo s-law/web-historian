@@ -11,11 +11,38 @@ exports.headers = headers = {
 };
 
 exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+  if (asset === '/') {
+    asset = '/index.html';
+  }
+
+  // where is this precise module located with __dirname?
+  var assetPath = path.join(__dirname, '/public/' + asset);
+  fs.readFile(assetPath, function(err, data) {
+    // ignore error case for now
+    // we have data and want to do something with it
+
+    if (path.extname(assetPath) === '.css') {
+      headers['Content-Type'] = 'text/css';
+    } else {
+      headers['Content-Type'] = 'text/html'; 
+    }
+    res.writeHead(200, headers);
+    res.end(data); 
+  });
 };
 
+exports.sendResponse = function(response, data, statusCode) {
+  statusCode = statusCode || 200;
+  response.writeHead(statusCode, headers);
+  response.end(JSON.stringify(data));
+};
 
+exports.collectData = function(request) {
+  var data = "";
+  request.on('data', function(chunk) {
+    data += chunk;
+  });
+  request.on('end', function() {
 
-// As you progress, keep thinking about what helper functions you can put here!
+  });
+};
