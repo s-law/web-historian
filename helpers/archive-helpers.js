@@ -47,7 +47,7 @@ exports.addUrlToList = function(target, callback) {
 };
 
 exports.isUrlArchived = function(target, callback) {
-  fs.stat(exports.paths.archivedSites + target, function(err, stat) {
+  fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
     if (err === null) {
       callback(true);
     } else if (err.code === 'ENOENT') {
