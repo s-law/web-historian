@@ -34,7 +34,7 @@ exports.serveAssets = function(res, asset, statusCode, callback) {
     }
     // res.writeHead(statusCode, headers);
     // res.end(data); 
-    exports.sendResponse(res, data, statusCode)
+    exports.sendResponse(res, data, statusCode);
   });
 };
 
