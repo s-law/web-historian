@@ -53,7 +53,7 @@ exports.isUrlInList = function(target) {
   // });
 };
 
-exports.addUrlToList = function(target, callback) {
+exports.addUrlToList = function(target) {
   return new Promise(function(resolve, reject) {
     fs.appendFile(exports.paths.list, '\n' + target, function(err) {
       if (err) {
@@ -69,13 +69,24 @@ exports.addUrlToList = function(target, callback) {
 };
 
 exports.isUrlArchived = function(target, callback) {
-  fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
-    if (err === null) {
-      callback(true);
-    } else if (err.code === 'ENOENT') {
-      callback(false);
-    }
+  return new Promise(function(resolve, reject) {
+    fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
+      if (err.code === 'ENOENT') {
+        resolve(false);
+      } else if (err === null) {
+        resolve(true);
+      } else {
+        reject(err);
+      }
+    });
   });
+  // fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
+  //   if (err === null) {
+  //     callback(true);
+  //   } else if (err.code === 'ENOENT') {
+  //     callback(false);
+  //   }
+  // });
 };
 
 exports.downloadUrls = function(array) {
