@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var Promise = require('bluebird');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -56,19 +57,39 @@ exports.collectData = function(request, response, callback) {
 };
 
 exports.processData = function(target, response) {
-  archive.isUrlInList(target, function(inList) {
-    if(!inList) {
-      archive.addUrlToList(target, function() {
+  archive.isUrlInList(target)
+  .then(function(inList) {
+    if (!inList) {
+      archive.addUrlToList(target)
+      .then(function() {
         exports.serveAssets(response, '/public/loading.html', 302);
       });
     } else {
-      archive.isUrlArchived(target, function(inArchive) {
-        if(!inArchive) {
-          exports.serveAssets(response, '../public/loading.html', 302);
-        } else {
+      archive.isUrlArchived(target)
+      .then(function(inArchive) {
+        if (inArchive) {
           exports.serveAssets(response, '../archives/sites/'+target, 200);
+        } else {
+          exports.serveAssets(response, '/public/loading.html', 302);
         }
       });
     }
   });
+
+  // Continuous passing style
+  // archive.isUrlInList(target, function(inList) {
+  //   if(!inList) {
+  //     archive.addUrlToList(target, function() {
+  //       exports.serveAssets(response, '/public/loading.html', 302);
+  //     });
+  //   } else {
+  //     archive.isUrlArchived(target, function(inArchive) {
+  //       if(!inArchive) {
+  //         exports.serveAssets(response, '../public/loading.html', 302);
+  //       } else {
+  //         exports.serveAssets(response, '../archives/sites/'+target, 200);
+  //       }
+  //     });
+  //   }
+  // });
 }
