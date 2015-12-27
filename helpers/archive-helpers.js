@@ -45,10 +45,12 @@ exports.readListOfUrls = function() {
 };
 
 exports.isUrlInList = function(target) {
-  exports.readListOfUrls()
-  .then(function(list) {
-    return list.indexOf(target) > 0;
-  })
+  return new Promise(function(resolve, reject) {
+    exports.readListOfUrls()
+    .then(function(list) {
+      resolve(list.indexOf(target) > 0);
+    });
+  });
 
   // Continuous passing style
   // exports.readListOfUrls(function(list) {
