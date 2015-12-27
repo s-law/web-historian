@@ -37,7 +37,8 @@ exports.readListOfUrls = function() {
       }
     });
   });
-  // // Continuous passing style
+
+  // Continuous passing style
   // fs.readFile(exports.paths.list, 'utf8', function(err, data) {
   //   callback(data.split('\n'));
   // });
@@ -48,6 +49,8 @@ exports.isUrlInList = function(target) {
   .then(function(list) {
     return list.indexOf(target) > 0;
   })
+
+  // Continuous passing style
   // exports.readListOfUrls(function(list) {
   //   callback(list.indexOf(target) > 0);
   // });
@@ -63,6 +66,8 @@ exports.addUrlToList = function(target) {
       }
     });
   });
+
+  // Continuous passing style
   // tacks on to an existing file (if doesn't exist, will generate)
   // fs.appendFile(exports.paths.list, '\n' + target, function(err) {
   //   callback();
@@ -81,6 +86,8 @@ exports.isUrlArchived = function(target) {
       }
     });
   });
+
+  // Continuous passing style
   // fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
   //   if (err === null) {
   //     callback(true);
@@ -98,6 +105,8 @@ exports.downloadUrls = function(array) {
         downloadUrl(target);
       }
     })
+
+    // Continuous passing style
     // exports.isUrlArchived(target, function(result) {
     //   if (!result) {
     //     downloadUrl(target);
