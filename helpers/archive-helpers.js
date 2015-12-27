@@ -37,16 +37,20 @@ exports.readListOfUrls = function(callback) {
       }
     });
   });
-  // // Continuous passing style!
+  // // Continuous passing style
   // fs.readFile(exports.paths.list, 'utf8', function(err, data) {
   //   callback(data.split('\n'));
   // });
 };
 
 exports.isUrlInList = function(target, callback) {
-  exports.readListOfUrls(function(list) {
-    callback(list.indexOf(target) > 0);
-  });
+  exports.readListOfUrls()
+  .then(function(list) {
+    return list.indexOf(target) > 0;
+  })
+  // exports.readListOfUrls(function(list) {
+  //   callback(list.indexOf(target) > 0);
+  // });
 };
 
 exports.addUrlToList = function(target, callback) {
