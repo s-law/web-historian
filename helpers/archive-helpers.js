@@ -72,12 +72,12 @@ exports.addUrlToList = function(target) {
 exports.isUrlArchived = function(target) {
   return new Promise(function(resolve, reject) {
     fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
-      if (err.code === 'ENOENT') {
+      if (err && err.code === 'ENOENT') {
         resolve(false);
-      } else if (err === null) {
-        resolve(true);
+      } else if (err) {
+        reject(err); 
       } else {
-        reject(err);
+        resolve(true);
       }
     });
   });
