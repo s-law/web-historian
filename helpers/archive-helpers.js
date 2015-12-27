@@ -74,7 +74,7 @@ exports.downloadUrls = function(array) {
     };
 
     http.get(options, function(res) {
-      var completeData;
+      var completeData = '';
       res.on('data', function(chunk) {
         completeData += chunk;
       });
