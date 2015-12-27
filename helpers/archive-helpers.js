@@ -68,7 +68,7 @@ exports.addUrlToList = function(target) {
   // });
 };
 
-exports.isUrlArchived = function(target, callback) {
+exports.isUrlArchived = function(target) {
   return new Promise(function(resolve, reject) {
     fs.stat(exports.paths.archivedSites + '/' + target, function(err, stat) {
       if (err.code === 'ENOENT') {
@@ -91,11 +91,17 @@ exports.isUrlArchived = function(target, callback) {
 
 exports.downloadUrls = function(array) {
   array.forEach(function(target) {
-    exports.isUrlArchived(target, function(result) {
-      if (!result) {
+    exports.isUrlArchived(target)
+    .then(function(is) {
+      if(!is) {
         downloadUrl(target);
       }
-    });
+    })
+    // exports.isUrlArchived(target, function(result) {
+    //   if (!result) {
+    //     downloadUrl(target);
+    //   }
+    // });
   });
 
   var downloadUrl = function(target) {
@@ -121,9 +127,3 @@ exports.downloadUrls = function(array) {
     });    
   };
 };
-
-
-
-
-
-
