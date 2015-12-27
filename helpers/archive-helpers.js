@@ -27,7 +27,7 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(callback) {
+exports.readListOfUrls = function() {
   return new Promise(function(resolve, reject) {
     fs.readFile(exports.paths.list, 'utf8', function(err, data) {
       if (err) {
@@ -43,7 +43,7 @@ exports.readListOfUrls = function(callback) {
   // });
 };
 
-exports.isUrlInList = function(target, callback) {
+exports.isUrlInList = function(target) {
   exports.readListOfUrls()
   .then(function(list) {
     return list.indexOf(target) > 0;
@@ -54,10 +54,18 @@ exports.isUrlInList = function(target, callback) {
 };
 
 exports.addUrlToList = function(target, callback) {
-  // tacks on to an existing file (if doesn't exist, will generate)
-  fs.appendFile(exports.paths.list, '\n' + target, function(err) {
-    callback();
+  return new Promise(function(resolve, reject) {
+    fs.appendFile(exports.paths.list, '\n' + target, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
   });
+  // tacks on to an existing file (if doesn't exist, will generate)
+  // fs.appendFile(exports.paths.list, '\n' + target, function(err) {
+  //   callback();
+  // });
 };
 
 exports.isUrlArchived = function(target, callback) {
