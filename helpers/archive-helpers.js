@@ -61,6 +61,7 @@ exports.addUrlToList = function(target) {
       } else {
         resolve();
       }
+    });
   });
   // tacks on to an existing file (if doesn't exist, will generate)
   // fs.appendFile(exports.paths.list, '\n' + target, function(err) {
